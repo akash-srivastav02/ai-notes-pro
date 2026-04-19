@@ -9,6 +9,14 @@ const Summarizer = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const handleReset = () => {
+    setText("");
+    setFile(null);
+    setSummary("");
+    setError("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const handleSubmit = async () => {
     setError("");
     setSummary("");
@@ -135,21 +143,31 @@ const Summarizer = () => {
       {summary && (
         <div className="w-full max-w-4xl mt-6 backdrop-blur-lg bg-white/5 border border-white/10 p-6 rounded-2xl shadow-xl">
 
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Summary</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Summary</h2>
 
-            {/* Copy Button */}
-            <button
-              onClick={() => navigator.clipboard.writeText(summary)}
-              className="bg-blue-500 hover:bg-blue-600 px-4 py-1 rounded-lg text-sm"
-            >
-              Copy
-            </button>
+          <div className="flex gap-2">
+          {/* Copy */}
+          <button
+            onClick={() => navigator.clipboard.writeText(summary)}
+            className="bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded text-sm"
+          >
+            Copy
+          </button>
+
+          {/* New Summary */}
+          <button
+            onClick={handleReset}
+            className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm"
+          >
+            New
+          </button>
           </div>
+        </div>
 
-          <p className="whitespace-pre-line text-gray-300 leading-relaxed">
-            {summary}
-          </p>
+        <p className="whitespace-pre-line text-gray-300 leading-relaxed">
+          {summary}
+        </p>
         </div>
       )}
     </div>
