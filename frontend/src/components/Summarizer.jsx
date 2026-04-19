@@ -3,10 +3,8 @@ import { summarizeAPI } from "../services/api";
 
 const Summarizer = () => {
   const [activeTab, setActiveTab] = useState("text");
-
   const [text, setText] = useState("");
   const [file, setFile] = useState(null);
-
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -41,92 +39,117 @@ const Summarizer = () => {
   };
 
   return (
-    <div style={{ maxWidth: "900px", margin: "auto", padding: "20px" }}>
-      <h1 style={{ textAlign: "center" }}>🚀 AI Notes Summarizer</h1>
+    <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-black text-white flex flex-col items-center p-6">
+
+      {/* Title */}
+      <h1 className="text-4xl font-bold mb-2 text-center">
+        🚀 AI Notes Summarizer
+      </h1>
+      <p className="text-gray-400 mb-6 text-center">
+        Turn long content into short, smart summaries instantly
+      </p>
 
       {/* Tabs */}
-      <div style={{ display: "flex", justifyContent: "center", gap: "10px", margin: "20px 0" }}>
+      <div className="flex gap-4 mb-6">
         {["text", "pdf"].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            style={{
-              padding: "10px 20px",
-              borderRadius: "8px",
-              border: "none",
-              background: activeTab === tab ? "#3b82f6" : "#1e293b",
-              color: "white",
-            }}
+            className={`px-5 py-2 rounded-full transition-all duration-200 ${
+              activeTab === tab
+                ? "bg-blue-500 shadow-lg"
+                : "bg-slate-700 hover:bg-slate-600"
+            }`}
           >
             {tab.toUpperCase()}
           </button>
         ))}
       </div>
 
-      {/* Card */}
-      <div style={{
-        background: "#1e293b",
-        padding: "20px",
-        borderRadius: "12px"
-      }}>
+      {/* Main Card */}
+      <div className="w-full max-w-4xl backdrop-blur-lg bg-white/5 border border-white/10 p-6 rounded-2xl shadow-xl">
+
+        {/* INPUT */}
         {activeTab === "text" && (
-          <textarea
-            style={{
-              width: "97%",
-              height: "180px",        // fixed height
-              padding: "10px",
-              borderRadius: "8px",
-              resize: "none",         // prevent manual resize
-              overflowY: "auto",      // enable vertical scroll
-              outline: "none",
-              scrollBehavior: "smooth",
-              border: "1px solid #334155",
-              background: "#0f172a",
-              color: "white"
-            }}
-            placeholder="Paste your notes..."
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
+          <>
+            <textarea
+              className="w-full h-48 p-4 rounded-xl bg-slate-900 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-y-auto"
+              placeholder="Paste your notes..."
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            />
+
+            {/* Character Count */}
+            <p className="text-right text-sm text-gray-400 mt-1">
+              {text.length} characters
+            </p>
+          </>
         )}
 
         {activeTab === "pdf" && (
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
+          <label className="w-full flex flex-col items-center justify-center border-2 border-dashed border-slate-600 rounded-xl p-6 cursor-pointer hover:border-blue-500 transition">
+
+            <span className="text-gray-400 mb-2">
+              Click to upload PDF
+            </span>
+
+            <span className="text-sm text-gray-500">
+              {file ? file.name : "No file selected"}
+            </span>
+
+            <input
+              type="file"
+              accept="application/pdf"
+              className="hidden"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
+          </label>
+        )}
+        
+        {file && (
+          <p className="text-xs text-gray-400 mt-2">
+            {(file.size / 1024).toFixed(2)} KB
+          </p>
         )}
 
+        {/* BUTTON */}
         <button
           onClick={handleSubmit}
-          style={{
-            marginTop: "15px",
-            padding: "10px 20px",
-            background: "#22c55e",
-            border: "none",
-            borderRadius: "8px",
-            color: "white",
-            width: "100%",
-          }}
+          disabled={loading}
+          className={`mt-5 w-full py-3 rounded-xl font-semibold transition ${
+            loading
+              ? "bg-gray-600 cursor-not-allowed"
+              : "bg-green-500 hover:bg-green-600 shadow-lg"
+          }`}
         >
-          {loading ? "Processing..." : "Summarize"}
+          {loading ? "Summarizing..." : "Summarize"}
         </button>
+
+        {/* ERROR */}
+        {error && (
+          <p className="text-red-400 mt-3 text-center">{error}</p>
+        )}
       </div>
 
-      {/* Error */}
-      {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
-
-      {/* Result */}
+      {/* RESULT */}
       {summary && (
-        <div style={{
-          marginTop: "20px",
-          background: "#1e293b",
-          padding: "20px",
-          borderRadius: "12px"
-        }}>
-          <h2>Summary</h2>
-          <p>{summary}</p>
+        <div className="w-full max-w-4xl mt-6 backdrop-blur-lg bg-white/5 border border-white/10 p-6 rounded-2xl shadow-xl">
+
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Summary</h2>
+
+            {/* Copy Button */}
+            <button
+              onClick={() => navigator.clipboard.writeText(summary)}
+              className="bg-blue-500 hover:bg-blue-600 px-4 py-1 rounded-lg text-sm"
+            >
+              Copy
+            </button>
+          </div>
+
+          <p className="whitespace-pre-line text-gray-300 leading-relaxed">
+            {summary}
+          </p>
         </div>
       )}
     </div>
