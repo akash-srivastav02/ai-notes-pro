@@ -39,7 +39,7 @@ const Summarizer = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-black text-white flex flex-col items-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-black text-white flex flex-col items-center p-6">
 
       {/* Title */}
       <h1 className="text-4xl font-bold mb-2 text-center">
