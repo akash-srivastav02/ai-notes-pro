@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { summarizeAPI } from "../services/api";
 
+
 const Summarizer = () => {
   const [activeTab, setActiveTab] = useState("text");
   const [text, setText] = useState("");
